@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ZAI Notes — a premium, glassmorphic note-taking app." />
+  <title>ZAI Notes</title>
+
+  <!-- Google Fonts: Sora for display/headings, Inter for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Our stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Decorative floating gradient orbs (purely visual, hidden from screen readers) -->
+  <div class="ambient-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <!-- Skip link for keyboard / screen-reader users -->
+  <a class="skip-link" href="#main-content">Skip to notes</a>
+
+  <div class="app-shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4h16v4l-11 11H20v1H4v-4l11-11H4V4z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="brand-name">ZAI <strong>Notes</strong></span>
+        </div>
+        <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <!-- New note button -->
+      <button class="btn btn-primary new-note-btn ripple" id="newNoteBtn" aria-label="Create a new note (Ctrl+N)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        New Note
+      </button>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="search" id="searchInput" class="search-input" placeholder="Search notes..." aria-label="Search notes" />
+      </div>
+
+      <!-- Filters -->
+      <nav class="filters" aria-label="Filter notes">
+        <button class="filter-btn active" data-filter="all" aria-current="page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+          All Notes <span class="count-badge" id="countAll">0</span>
+        </button>
+        <button class="filter-btn" data-filter="pinned">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2l1.6 5.1L19 8l-4 3.6L16 17l-4-2.6L8 17l1-5.4-4-3.6 5.4-.9L12 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Pinned <span class="count-badge" id="countPinned">0</span>
+        </button>
+        <button class="filter-btn" data-filter="recent">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Recent <span class="count-badge" id="countRecent">0</span>
+        </button>
+        <button class="filter-btn" data-filter="favorites">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.3 4.5 6 4c2-.3 3.8.6 6 3 2.2-2.4 4-3.3 6-3 3.7.5 5.6 4.1 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Favorites <span class="count-badge" id="countFavorites">0</span>
+        </button>
+        <button class="filter-btn" data-filter="archived">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="4" rx="1" stroke="currentColor" stroke-width="2"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" stroke="currentColor" stroke-width="2"/><path d="M10 13h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Archived <span class="count-badge" id="countArchived">0</span>
+        </button>
+      </nav>
+
+      <!-- Color label legend / filter -->
+      <div class="label-filters" aria-label="Filter by color label">
+        <span class="label-filters-title">Labels</span>
+        <div class="label-chips">
+          <button class="label-chip" data-color="all" aria-label="All colors" style="background:conic-gradient(from 0deg,#2563EB,#22C55E,#FACC15,#EC4899,#2563EB)"></button>
+          <button class="label-chip" data-color="blue" aria-label="Blue label" style="background:#2563EB"></button>
+          <button class="label-chip" data-color="green" aria-label="Green label" style="background:#22C55E"></button>
+          <button class="label-chip" data-color="yellow" aria-label="Yellow label" style="background:#FACC15"></button>
+          <button class="label-chip" data-color="pink" aria-label="Pink label" style="background:#EC4899"></button>
+        </div>
+      </div>
+
+      <!-- Theme toggle -->
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+              <svg class="icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </span>
+          </span>
+          <span class="theme-toggle-label">Dark mode</span>
+        </button>
+        <p class="shortcuts-hint">
+          <kbd>Ctrl</kbd>+<kbd>N</kbd> new · <kbd>Esc</kbd> close
+        </p>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content" id="main-content">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <h1 class="page-title" id="pageTitle">All Notes</h1>
+        <div class="topbar-actions">
+          <button class="btn btn-primary btn-compact ripple" id="newNoteBtnTop" aria-label="Create a new note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <span class="btn-compact-text">New</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Notes grid -->
+      <section class="notes-grid" id="notesGrid" aria-live="polite" aria-label="Notes"></section>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState" hidden>
+        <svg width="120" height="120" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <rect x="40" y="30" width="120" height="150" rx="14" fill="url(#g1)" opacity="0.15"/>
+          <rect x="40" y="30" width="120" height="150" rx="14" stroke="#2563EB" stroke-width="2.5" fill="none"/>
+          <line x1="60" y1="65" x2="140" y2="65" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
+          <line x1="60" y1="88" x2="140" y2="88" stroke="#60A5FA" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+          <line x1="60" y1="111" x2="110" y2="111" stroke="#60A5FA" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+          <circle cx="146" cy="146" r="26" fill="#2563EB"/>
+          <path d="M146 134v24M134 146h24" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+          <defs><linearGradient id="g1" x1="40" y1="30" x2="160" y2="180"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#60A5FA"/></linearGradient></defs>
+        </svg>
+        <h2 id="emptyStateTitle">No notes here yet</h2>
+        <p id="emptyStateText">Start capturing your ideas — create your first note and it'll show up here.</p>
+        <button class="btn btn-primary ripple" id="emptyStateBtn">Create a note</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ NOTE EDITOR MODAL ============ -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="noteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <input type="text" id="noteTitleInput" class="note-title-input" placeholder="Note title" aria-label="Note title" maxlength="120" />
+        <button class="icon-btn" id="closeModalBtn" aria-label="Close editor (Esc)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="modal-toolbar">
+        <div class="color-picker" role="group" aria-label="Note color label">
+          <button class="color-swatch active" data-color="blue" style="--swatch:#2563EB" aria-label="Blue label" aria-pressed="true"></button>
+          <button class="color-swatch" data-color="green" style="--swatch:#22C55E" aria-label="Green label" aria-pressed="false"></button>
+          <button class="color-swatch" data-color="yellow" style="--swatch:#FACC15" aria-label="Yellow label" aria-pressed="false"></button>
+          <button class="color-swatch" data-color="pink" style="--swatch:#EC4899" aria-label="Pink label" aria-pressed="false"></button>
+        </div>
+        <div class="modal-toolbar-actions">
+          <button class="icon-btn" id="pinToggleBtn" aria-label="Pin note" aria-pressed="false" title="Pin note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 2l1.6 5.1L19 8l-4 3.6L16 17l-4-2.6L8 17l1-5.4-4-3.6 5.4-.9L12 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="icon-btn" id="favToggleBtn" aria-label="Favorite note" aria-pressed="false" title="Favorite note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.3 4.5 6 4c2-.3 3.8.6 6 3 2.2-2.4 4-3.3 6-3 3.7.5 5.6 4.1 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <textarea id="noteContentInput" class="note-content-input" placeholder="Start typing your note..." aria-label="Note content"></textarea>
+
+      <footer class="modal-footer">
+        <div class="modal-meta">
+          <span id="charCounter">0 characters</span>
+          <span class="meta-divider">·</span>
+          <span id="metaCreated">Created just now</span>
+          <span class="meta-divider">·</span>
+          <span id="metaEdited">Not edited</span>
+        </div>
+        <div class="modal-footer-actions">
+          <button class="icon-btn" id="duplicateBtn" title="Duplicate note" aria-label="Duplicate note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          <button class="icon-btn" id="copyBtn" title="Copy note text" aria-label="Copy note text">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 16h6M9 8h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="4" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          <button class="icon-btn" id="archiveBtn" title="Archive note" aria-label="Archive note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="4" rx="1" stroke="currentColor" stroke-width="2"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          <button class="icon-btn icon-btn-danger" id="deleteBtn" title="Delete note" aria-label="Delete note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <button class="btn btn-primary btn-compact ripple" id="saveNoteBtn">Save</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ DELETE CONFIRMATION MODAL ============ -->
+  <div class="modal-overlay" id="confirmOverlay" hidden>
+    <div class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+      <div class="confirm-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h2 id="confirmTitle">Delete this note?</h2>
+      <p id="confirmText">This action can't be undone. The note will be permanently removed.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Our JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
